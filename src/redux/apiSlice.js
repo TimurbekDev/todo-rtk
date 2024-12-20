@@ -5,19 +5,17 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "https://todo.timurbek-saburov.space", prepareHeaders: (headers) => {
             if (true) {
-                headers.set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+                headers.set('Authorization', `Bearer ${localStorage.getItem('token') || null}`);
             }
             return headers;
         }
     },
     ),
     tagTypes: ['Todos'],
+    keepUnusedDataFor: 20,
     endpoints: (builder) => ({
         getTodos: builder.query({
             query: () => '/todo/users/1',
-            transformErrorResponse: async (response) => {
-                return response.data
-            },
             providesTags: ['Todos']
         }),
         addTodo: builder.mutation({
@@ -43,7 +41,7 @@ export const apiSlice = createApi({
                 body: todo
             }),
             invalidatesTags: ['Todos']
-        })
+        }),
     })
 })
 

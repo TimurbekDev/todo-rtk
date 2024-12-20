@@ -6,9 +6,7 @@ import TodoList from './pages/TodosList'
 import { login } from './services/login.service'
 
 const App = () => {
-  let loginRes = login()
-  console.log(loginRes);
-  
+  login()  
   return (
       <BrowserRouter>
         <Navbar />

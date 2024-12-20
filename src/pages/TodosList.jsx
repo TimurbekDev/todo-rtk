@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAddTodoMutation, useDeleteTodoMutation, useEditCompletedMutation, useGetTodosQuery } from "../redux/apiSlice";
-import { Loader2Icon } from "lucide-react";
 
-const TodoList = () => {
+function TodoList() {
     const [newTodo, setNewTodo] = useState("");
     const [editingTodo, setEditingTodo] = useState(null);
     const [editText, setEditText] = useState("");
 
     const { data: todos, isError, isLoading } = useGetTodosQuery();
-
-    console.log(todos);
-    
-    const [deleteTodo, { isSuccess: deleteSuccess, data:deletedTodo,originalArgs:deletingTodoId , isLoading:deleteIsLoading}] = useDeleteTodoMutation();
-    
+    const [deleteTodo, { originalArgs: deletingTodoId, isLoading: deleteIsLoading }] = useDeleteTodoMutation();
     const [addTodo, { isLoading: addTodoLoading }] = useAddTodoMutation();
-    const [editCompleted,{isLoading:toogleLoading,originalArgs:tooglingTodo}] = useEditCompletedMutation()
+    const [editCompleted, { isLoading: toogleLoading, originalArgs: tooglingTodo }] = useEditCompletedMutation();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,9 +17,9 @@ const TodoList = () => {
         setNewTodo(e.target.value);
         addTodo({
             text: newTodo,
-            from:'10.24.2003',
-            to : '10.24.2003',
-            userId : 1,
+            from: '10.24.2003',
+            to: '10.24.2003',
+            userId: 1,
             isCompleted: false
         })
         setNewTodo("");
@@ -34,25 +29,25 @@ const TodoList = () => {
         deleteTodo(id)
     };
 
-    const handleToggle = (id) => {  
-        let todo = todos.find(t=>t.id==id)      
+    const handleToggle = (id) => {
+        let todo = todos.find(t => t.id == id)
         editCompleted({
             ...todo,
-            isCompleted : !todo.isCompleted
+            isCompleted: !todo.isCompleted
         })
     };
 
     const startEditing = (id) => {
         setEditingTodo(id)
-        let todo = todos.find(t=>t.id==id)  
+        let todo = todos.find(t => t.id == id)
         setEditText(todo.text)
     };
 
     const handleEdit = async (id) => {
-        let todo = todos.find(t=>t.id==id)      
+        let todo = todos.find(t => t.id == id)
         editCompleted({
             ...todo,
-            text : editText
+            text: editText
         })
         setEditText("")
         setEditingTodo(null)
@@ -119,7 +114,7 @@ const TodoList = () => {
                                     className={`flex-1 ${todo.isCompleted ? "line-through text-base-content/70" : ""
                                         }`}
                                 >
-                                    { (toogleLoading && tooglingTodo.id == todo.id ) ? <span className="loading loading-spinner loading-lg"/> : todo.text }
+                                    {(toogleLoading && tooglingTodo.id == todo.id) ? <span className="loading loading-spinner loading-lg" /> : todo.text}
                                 </span>
                                 <button
                                     onClick={() => startEditing(todo.id)}
@@ -134,13 +129,13 @@ const TodoList = () => {
                             onClick={() => handleDelete(+todo.id)}
                             className='btn btn-error btn-sm'
                         >
-                           {(deleteIsLoading && deletingTodoId == todo.id) ? <Loader2Icon/> : 'Delete'}
+                            {(deleteIsLoading && deletingTodoId == todo.id) ? <span className="loading loading-spinner loading-lg" /> : 'Delete'}
                         </button>
                     </li>
                 ))}
             </ul>
         </div>
     );
-};
+}
 
 export default TodoList;
